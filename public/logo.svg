@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 124 124" fill="none">
+
+  <!-- Núcleo central de emissão -->
+  <circle cx="62" cy="62" r="7" fill="#00F5D4"/>
+
+  <!-- Anel Cinético 1: Impulso interno -->
+  <path d="M62 44 A18 18 0 1 1 45.5 69" stroke="#00F5D4" stroke-width="5.5" stroke-linecap="round" fill="none"/>
+
+  <!-- Anel Cinético 2: Expansão intermédia -->
+  <path d="M62 33 A29 29 0 1 0 89.5 53" stroke="#00F5D4" stroke-width="5.5" stroke-linecap="round" fill="none"/>
+
+  <!-- Anel Cinético 3: Alcance exterior (Broadcast) -->
+  <path d="M62 21 A41 41 0 1 1 25.5 78" stroke="#00F5D4" stroke-width="5.5" stroke-linecap="round" fill="none"/>
+</svg>

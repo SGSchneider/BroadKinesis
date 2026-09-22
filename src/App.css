@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+
+  /* Paleta Clara */
+  --bg-app: #f4f4f5dc;
+  --bg-surface: #ffffffdc;
+  --text-main: #18181b;
+  --text-muted: #71717a;
+  --border: #e4e4e7;
+  --primary: #2563eb;
+  --primary-text: #ffffff;
+}
+
+/* Quando o app estiver em modo escuro */
+.dark {
+  /* Paleta Escura (tons neutros/modernos) */
+  --bg-app: #18181bdc;
+  --bg-surface: #27272adc;
+  --text-main: #f4f4f5;
+  --text-muted: #a1a1aa;
+  --border: #3f3f46;
+  --primary: #3b82f6;
+  --primary-text: #ffffff;
+}
+
+html {
+  background-color: transparent;
+}
+
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  user-select: none;
+}
+
+/* Controles padrão herdando as variáveis */
+button {
+  cursor: pointer;
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+}
+
+input {
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-family: inherit;
+}
