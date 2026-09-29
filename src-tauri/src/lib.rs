@@ -1,5 +1,7 @@
 mod db;
 mod credentials;
+mod obswebsocket;
+
 use credentials::*;
 use db::AppDatabase;
 use tauri::Manager;
@@ -16,9 +18,10 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
           let database = AppDatabase::init(db_path)?;
 
           app.manage(database);
+          app.manage(obswebsocket::ObsConnectionState::default());
           Ok(())
         })
-                .invoke_handler(tauri::generate_handler![set_obs_websocket])
+                .invoke_handler(tauri::generate_handler![set_obs_websocket, get_obs_websocket, connect_obs_websocket, save_twitch_creds, get_twitch_creds])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 
@@ -43,4 +46,23 @@ fn set_obs_websocket(creds:ObsWebsocket, db: State<AppDatabase>) -> Result<(), S
 #[tauri::command]
 fn get_obs_websocket(db: State<AppDatabase>) -> Result<Option<ObsWebsocket>, String> {
     db.get_item("obsWebsocket").map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+async fn connect_obs_websocket(db: State<'_, AppDatabase>, connection: State<'_, obswebsocket::ObsConnectionState>) -> Result<(), String>{
+  let result_from_db: Option<ObsWebsocket> = db
+  .get_item("obsWebsocket")
+  .map_err(|e| e.to_string())?;
+
+  let creds = result_from_db.unwrap_or_default();
+
+  let client = obswebsocket::connect_obs(creds)
+  .await
+  .map_err(|error| error.to_string())?; 
+
+  let mut stored_client = connection.client.lock().await;
+  *stored_client = Some(client);
+
+  Ok(())
+
 }

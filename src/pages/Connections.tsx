@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TransparentButton from "../components/TransparentButton";
+
 export default function Connections() {
 	const [page, setPage] = useState("twitch");
 
@@ -54,11 +55,45 @@ function Platform({ platform }: { platform: string }) {
 }
 
 function Twitch() {
-	return "Twitch";
+	const [isLoading, setIsLoading] = useState(true);
+	if (isLoading) {
+		return (
+			<div
+				className="flex min-h-40 w-full items-center justify-center"
+				role="status"
+				aria-label="Carregando configurações da Twitch"
+			>
+				<div className="loading-dots" aria-hidden="true">
+					<span />
+					<span />
+					<span />
+				</div>
+			</div>
+		);
+	} else {
+		setIsLoading(true);
+	}
 }
 
 function Youtube() {
-	return "Twitch";
+	const [isLoading, setIsLoading] = useState(true);
+	if (isLoading) {
+		return (
+			<div
+				className="flex min-h-40 w-full items-center justify-center"
+				role="status"
+				aria-label="Carregando configurações do Youtube"
+			>
+				<div className="loading-dots" aria-hidden="true">
+					<span />
+					<span />
+					<span />
+				</div>
+			</div>
+		);
+	} else {
+		setIsLoading(true);
+	}
 }
 
 function Obs() {
@@ -67,8 +102,49 @@ function Obs() {
 	const [password, setPassword] = useState<string>("");
 	const [reconnect, setReconnect] = useState(true);
 	const [reconnectTime, setReconnectTime] = useState("30");
+	const [isLoading, setIsLoading] = useState(true);
 
-	function Connect() {}
+	useEffect(() => {
+		let isMounted = true;
+
+		void invoke<ObsWebsocket | null>("get_obs_websocket")
+			.then((values) => {
+				if (!isMounted || !values) return;
+				setAddress(values.address);
+				setPort(String(values.port));
+				setPassword(values.password);
+				setReconnect(values.autoReconnect);
+				setReconnectTime(String(values.autoReconnectTime));
+			})
+			.catch(console.error)
+			.finally(() => {
+				if (isMounted) setIsLoading(false);
+			});
+
+		return () => {
+			isMounted = false;
+		};
+	}, []);
+
+	function Connect() {
+		void invoke("connect_obs_websocket");
+	}
+
+	if (isLoading) {
+		return (
+			<div
+				className="flex min-h-40 w-full items-center justify-center"
+				role="status"
+				aria-label="Carregando configurações do OBS"
+			>
+				<div className="loading-dots" aria-hidden="true">
+					<span />
+					<span />
+					<span />
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="w-full h-full flex flex-col">
@@ -78,6 +154,7 @@ function Obs() {
 						<p className="m-1">Address</p>
 						<input
 							type="text"
+							disabled={isLoading}
 							placeholder="127.0.0.1"
 							value={address}
 							onChange={(event) => {
@@ -103,6 +180,7 @@ function Obs() {
 						<p className="m-1">Port</p>
 						<input
 							type="number"
+							disabled={isLoading}
 							placeholder="4455"
 							value={port}
 							onChange={(event) => {
@@ -130,6 +208,7 @@ function Obs() {
 						<p className="m-1">Password (if enabled)</p>
 						<input
 							type="password"
+							disabled={isLoading}
 							placeholder="password"
 							value={password}
 							onChange={(event) => {
@@ -162,6 +241,7 @@ function Obs() {
 						<p className="m-1">Auto Reconnect</p>
 						<input
 							type="checkbox"
+							disabled={isLoading}
 							checked={reconnect}
 							onChange={(event) => {
 								const nextReconnect = event.currentTarget.checked;
@@ -184,6 +264,7 @@ function Obs() {
 							<p className="m-1">Time Between Attempts (In Seconds)</p>
 							<input
 								type="number"
+								disabled={isLoading}
 								placeholder="30"
 								value={reconnectTime}
 								onChange={(event) => {

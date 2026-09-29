@@ -1,4 +1,4 @@
-use redb::{Database, ReadableTable, TableDefinition};
+use redb::{Database, TableDefinition};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::path::Path;

@@ -22,7 +22,7 @@ pub struct YoutubeCredentials {
     pub refresh_token: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ObsWebsocket{
   pub address: String,
@@ -32,4 +32,15 @@ pub struct ObsWebsocket{
   pub auto_reconnect: bool,
   #[serde(default)]
   pub auto_reconnect_time: u16,
+}
+
+impl Default for ObsWebsocket{
+  fn default() -> Self {
+      Self { address: "127.0.0.1".to_string(),
+          port: 4455,
+          password: String::new(),
+          auto_reconnect: true,
+          auto_reconnect_time: 30 
+        }
+  }
 }
