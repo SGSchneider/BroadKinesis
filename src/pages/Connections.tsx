@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
+import Loading from "../components/Loading";
 import TransparentButton from "../components/TransparentButton";
 
 export default function Connections() {
@@ -57,19 +58,7 @@ function Platform({ platform }: { platform: string }) {
 function Twitch() {
 	const [isLoading, setIsLoading] = useState(true);
 	if (isLoading) {
-		return (
-			<div
-				className="flex min-h-40 w-full items-center justify-center"
-				role="status"
-				aria-label="Carregando configurações da Twitch"
-			>
-				<div className="loading-dots" aria-hidden="true">
-					<span />
-					<span />
-					<span />
-				</div>
-			</div>
-		);
+		return <Loading />;
 	} else {
 		setIsLoading(true);
 	}
@@ -78,19 +67,7 @@ function Twitch() {
 function Youtube() {
 	const [isLoading, setIsLoading] = useState(true);
 	if (isLoading) {
-		return (
-			<div
-				className="flex min-h-40 w-full items-center justify-center"
-				role="status"
-				aria-label="Carregando configurações do Youtube"
-			>
-				<div className="loading-dots" aria-hidden="true">
-					<span />
-					<span />
-					<span />
-				</div>
-			</div>
-		);
+		return <Loading />;
 	} else {
 		setIsLoading(true);
 	}
@@ -131,19 +108,7 @@ function Obs() {
 	}
 
 	if (isLoading) {
-		return (
-			<div
-				className="flex min-h-40 w-full items-center justify-center"
-				role="status"
-				aria-label="Carregando configurações do OBS"
-			>
-				<div className="loading-dots" aria-hidden="true">
-					<span />
-					<span />
-					<span />
-				</div>
-			</div>
-		);
+		return <Loading />;
 	}
 
 	return (

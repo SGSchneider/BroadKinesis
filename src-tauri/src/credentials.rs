@@ -2,8 +2,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct TwitchCredentials {
-    pub client_id: String,
-    pub client_secret: String,
+    
     #[serde(default)]
     pub access_token: Option<String>,
     #[serde(default)]
@@ -12,8 +11,6 @@ pub struct TwitchCredentials {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct YoutubeCredentials {
-    pub client_id: String,
-    pub client_secret: String,
     #[serde(default)]
     pub api_key: Option<String>,
     #[serde(default)]

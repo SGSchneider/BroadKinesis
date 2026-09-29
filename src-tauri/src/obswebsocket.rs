@@ -38,3 +38,18 @@ fn is_valid_ipv4(s: &str) -> bool {
 pub struct ObsConnectionState {
     pub client: tokio::sync::Mutex<Option<obws::Client>>
 }
+
+
+pub async fn check_connection(client: &obws::Client) -> Result<String, String>{
+  client.general().version().await.map_err(|error| error.to_string())?;
+
+  Ok("OK".to_string())
+}
+
+pub async fn handle_reconnection(creds : ObsWebsocket, client: &obws::Client){
+  if creds.auto_reconnect{
+    if check_connection(client).await.is_err() {
+      //TODO
+    }
+  } 
+}

@@ -66,3 +66,8 @@ async fn connect_obs_websocket(db: State<'_, AppDatabase>, connection: State<'_,
   Ok(())
 
 }
+
+#[tauri::command]
+async fn login_twitch() { 
+  
+}
