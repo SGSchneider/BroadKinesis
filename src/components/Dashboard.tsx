@@ -12,7 +12,7 @@ import TransparentButton from "./TransparentButton";
 
 export default function Dashboard() {
 	const [isOpen, setIsOpen] = useState(false);
-	const width = isOpen ? "w-48" : "w-14"; // Ajusta a largura com base no estado
+	const width = isOpen ? "w-48" : "w-14"; // Adjust the width based on the current state.
 	const [page, setPage] = useState("actions");
 
 	return (
@@ -122,6 +122,6 @@ function Page({ page }: { page: string }) {
 		case "preferences":
 			return <div>preferences</div>;
 		default:
-			return <div>erro</div>;
+			return <div>Error</div>;
 	}
 }

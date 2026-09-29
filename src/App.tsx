@@ -1,11 +1,15 @@
+import { getCurrentWindow } from "@tauri-apps/api/window"; // Import the window API.
 import { useEffect } from "react";
 import Navbar from "./components/Navbar";
 import "./App.css";
 import Dashboard from "./components/Dashboard";
+import { TwitchChat } from "./components/Multichat"; // Chat window component.
 
 export default function App() {
+	const appWindow = getCurrentWindow();
+
 	useEffect(() => {
-		// 1. Consulta se o SO prefere modo escuro
+		// Check whether the operating system prefers dark mode.
 		const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
 		function applyTheme(isDark: boolean) {
@@ -16,14 +20,18 @@ export default function App() {
 			}
 		}
 
-		// Aplica no carregamento inicial
+		// Apply the initial theme.
 		applyTheme(mediaQuery.matches);
 
-		// Ouve se o usuário alternar o tema nas configurações do sistema com o app aberto
+		// Listen for system theme changes while the app is open.
 		const listener = (e: MediaQueryListEvent) => applyTheme(e.matches);
 		mediaQuery.addEventListener("change", listener);
 		return () => mediaQuery.removeEventListener("change", listener);
 	}, []);
+
+	if (appWindow.label === "chat-window") {
+		return <Multichat />;
+	}
 
 	return (
 		<main className="w-screen h-screen bg-transparent! overflow-y-clip">
@@ -32,6 +40,16 @@ export default function App() {
 					<Navbar />
 				</div>
 				<Dashboard />
+			</div>
+		</main>
+	);
+}
+
+function Multichat() {
+	return (
+		<main className="w-screen h-screen bg-transparent overflow-hidden">
+			<div className="flex flex-col w-full h-full">
+				<TwitchChat />
 			</div>
 		</main>
 	);

@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Loading from "../components/Loading";
 import TransparentButton from "../components/TransparentButton";
 
@@ -57,21 +57,179 @@ function Platform({ platform }: { platform: string }) {
 
 function Twitch() {
 	const [isLoading, setIsLoading] = useState(true);
-	if (isLoading) {
-		return <Loading />;
-	} else {
-		setIsLoading(true);
+	const [isConnected, setIsConnected] = useState(false);
+	const [isAuthenticating, setIsAuthenticating] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+
+	const refreshStatus = useCallback(async () => {
+		try {
+			const credentials = await invoke<TwitchCredentials | null>(
+				"get_twitch_creds",
+			);
+			if (!credentials?.access_token) {
+				setIsConnected(false);
+				return;
+			}
+
+			setIsConnected(await invoke<boolean>("validate_twitch"));
+		} catch (reason) {
+			setError(reason instanceof Error ? reason.message : String(reason));
+			setIsConnected(false);
+		} finally {
+			setIsLoading(false);
+		}
+	}, []);
+
+	useEffect(() => {
+		void refreshStatus();
+		const interval = window.setInterval(() => void refreshStatus(), 60_000);
+		return () => window.clearInterval(interval);
+	}, [refreshStatus]);
+
+	async function toggleConnection() {
+		setError(null);
+		setIsAuthenticating(true);
+		try {
+			if (isConnected) {
+				await invoke("logout_twitch");
+				setIsConnected(false);
+			} else {
+				await invoke("login_twitch");
+				await refreshStatus();
+			}
+		} catch (reason) {
+			setError(reason instanceof Error ? reason.message : String(reason));
+		} finally {
+			setIsAuthenticating(false);
+		}
 	}
+
+	if (isLoading || isAuthenticating) {
+		return <Loading />;
+	}
+
+	return (
+		<div className="relative flex min-h-40 flex-col items-start gap-4 p-4">
+			<div className="flex items-center gap-2">
+				<span
+					className={`h-3 w-3 rounded-full ${isConnected ? "bg-green-500" : "bg-red-500"}`}
+					aria-hidden="true"
+				/>
+				<span>{isConnected ? "Conectado" : "Desconectado"}</span>
+			</div>
+			<button type="button" onClick={() => void toggleConnection()}>
+				{isConnected ? "Desconectar" : "Conectar"}
+			</button>
+			{error && (
+				<div className="fixed inset-0 z-10 flex items-center justify-center bg-black/20 p-4">
+					<div className="rounded-md border border-red-400 bg-red-50 p-4 text-red-800 shadow-lg">
+						<p>{error}</p>
+						<button
+							type="button"
+							className="mt-2"
+							onClick={() => setError(null)}
+						>
+							Close
+						</button>
+					</div>
+				</div>
+			)}
+		</div>
+	);
 }
+
+type TwitchCredentials = {
+	access_token?: string;
+	refresh_token?: string;
+};
 
 function Youtube() {
 	const [isLoading, setIsLoading] = useState(true);
-	if (isLoading) {
-		return <Loading />;
-	} else {
-		setIsLoading(true);
+	const [isConnected, setIsConnected] = useState(false);
+	const [isAuthenticating, setIsAuthenticating] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+
+	const refreshStatus = useCallback(async () => {
+		try {
+			const credentials = await invoke<YoutubeCredentials | null>(
+				"get_youtube_creds",
+			);
+			if (!credentials?.access_token) {
+				setIsConnected(false);
+				return;
+			}
+
+			setIsConnected(await invoke<boolean>("validate_youtube"));
+		} catch (reason) {
+			setError(reason instanceof Error ? reason.message : String(reason));
+			setIsConnected(false);
+		} finally {
+			setIsLoading(false);
+		}
+	}, []);
+
+	useEffect(() => {
+		void refreshStatus();
+		const interval = window.setInterval(() => void refreshStatus(), 60_000);
+		return () => window.clearInterval(interval);
+	}, [refreshStatus]);
+
+	async function toggleConnection() {
+		setError(null);
+		setIsAuthenticating(true);
+		try {
+			if (isConnected) {
+				await invoke("logout_youtube");
+				setIsConnected(false);
+			} else {
+				await invoke("login_youtube");
+				await refreshStatus();
+			}
+		} catch (reason) {
+			setError(reason instanceof Error ? reason.message : String(reason));
+		} finally {
+			setIsAuthenticating(false);
+		}
 	}
+
+	if (isLoading || isAuthenticating) {
+		return <Loading />;
+	}
+
+	return (
+		<div className="relative flex min-h-40 flex-col items-start gap-4 p-4">
+			<div className="flex items-center gap-2">
+				<span
+					className={`h-3 w-3 rounded-full ${isConnected ? "bg-green-500" : "bg-red-500"}`}
+					aria-hidden="true"
+				/>
+				<span>{isConnected ? "Conectado" : "Desconectado"}</span>
+			</div>
+			<button type="button" onClick={() => void toggleConnection()}>
+				{isConnected ? "Desconectar" : "Conectar"}
+			</button>
+			{error && (
+				<div className="fixed inset-0 z-10 flex items-center justify-center bg-black/20 p-4">
+					<div className="rounded-md border border-red-400 bg-red-50 p-4 text-red-800 shadow-lg">
+						<p>{error}</p>
+						<button
+							type="button"
+							className="mt-2"
+							onClick={() => setError(null)}
+						>
+							Close
+						</button>
+					</div>
+				</div>
+			)}
+		</div>
+	);
 }
+
+type YoutubeCredentials = {
+	access_token?: string;
+	refresh_token?: string;
+};
 
 function Obs() {
 	const [address, setAddress] = useState<string>("127.0.0.1");

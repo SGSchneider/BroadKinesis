@@ -1,22 +1,23 @@
-use redb::{Database, TableDefinition};
+use redb::{Database, ReadableDatabase, TableDefinition};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use std::path::Path;
 use std::sync::Arc;
 
-// Tabela única para credenciais: chave (&str) -> payload de bytes (&[u8])
+// Single credentials table: key (&str) -> byte payload (&[u8])
 const CREDENTIALS_TABLE: TableDefinition<&str, &[u8]> = TableDefinition::new("credentials");
 
+#[derive(Clone)]
 pub struct AppDatabase {
     db: Arc<Database>,
 }
 
 impl AppDatabase {
-    /// Abre ou cria o arquivo do banco no caminho especificado
+    /// Opens or creates the database file at the specified path.
     pub fn init<P: AsRef<Path>>(path: P) -> Result<Self, Box<dyn std::error::Error>> {
         let db = Database::create(path)?;
-        
-        // Garante que a tabela exista abrindo uma transação rápida de escrita
+
+        // Ensure the table exists by opening a short write transaction.
         let write_txn = db.begin_write()?;
         {
             let _ = write_txn.open_table(CREDENTIALS_TABLE)?;
@@ -26,8 +27,12 @@ impl AppDatabase {
         Ok(Self { db: Arc::new(db) })
     }
 
-    /// Salva qualquer estrutura serializável sob uma chave específica
-    pub fn save_item<T: Serialize>(&self, key: &str, item: &T) -> Result<(), Box<dyn std::error::Error>> {
+    /// Saves any serializable structure under a specific key.
+    pub fn save_item<T: Serialize>(
+        &self,
+        key: &str,
+        item: &T,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let bytes = serde_json::to_vec(item)?;
 
         let write_txn = self.db.begin_write()?;
@@ -39,8 +44,11 @@ impl AppDatabase {
         Ok(())
     }
 
-    /// Recupera e desserializa uma estrutura pela chave
-    pub fn get_item<T: DeserializeOwned>(&self, key: &str) -> Result<Option<T>, Box<dyn std::error::Error>> {
+    /// Retrieves and deserializes a structure by key.
+    pub fn get_item<T: DeserializeOwned>(
+        &self,
+        key: &str,
+    ) -> Result<Option<T>, Box<dyn std::error::Error>> {
         let read_txn = self.db.begin_read()?;
         let table = read_txn.open_table(CREDENTIALS_TABLE)?;
 
@@ -50,5 +58,15 @@ impl AppDatabase {
         }
 
         Ok(None)
+    }
+
+    pub fn delete_item(&self, key: &str) -> Result<(), Box<dyn std::error::Error>> {
+        let write_txn = self.db.begin_write()?;
+        {
+            let mut table = write_txn.open_table(CREDENTIALS_TABLE)?;
+            table.remove(key)?;
+        }
+        write_txn.commit()?;
+        Ok(())
     }
 }

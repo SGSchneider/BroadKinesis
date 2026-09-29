@@ -5,7 +5,7 @@
   font-size: 16px;
   line-height: 24px;
 
-  /* Paleta Clara */
+  /* Light palette. */
   --bg-app: #f4f4f5dc;
   --bg-surface: #ffffffdc;
   --text-main: #18181b;
@@ -15,9 +15,9 @@
   --primary-text: #ffffff;
 }
 
-/* Quando o app estiver em modo escuro */
+/* Dark mode palette. */
 .dark {
-  /* Paleta Escura (tons neutros/modernos) */
+  /* Dark palette with modern neutral tones. */
   --bg-app: #18181bdc;
   --bg-surface: #27272adc;
   --text-main: #f4f4f5;
@@ -42,7 +42,7 @@ body,
   user-select: none;
 }
 
-/* Controles padrão herdando as variáveis */
+/* Default controls inherit the theme variables. */
 button {
   cursor: pointer;
   background-color: var(--bg-surface);
