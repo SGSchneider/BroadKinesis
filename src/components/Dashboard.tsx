@@ -7,11 +7,12 @@ import {
 	Wrench,
 } from "lucide-react";
 import { useState } from "react";
+import Connections from "../pages/Connections";
 import TransparentButton from "./TransparentButton";
 
 export default function Dashboard() {
 	const [isOpen, setIsOpen] = useState(false);
-	const width = isOpen ? "w-48" : "w-14"; // Ajusta a largura com base no estado
+	const width = isOpen ? "w-48" : "w-14"; // Adjust the width based on the current state.
 	const [page, setPage] = useState("actions");
 
 	return (
@@ -101,7 +102,7 @@ export default function Dashboard() {
 					<div className="h-full"></div>
 				</div>
 			</div>
-			<div>
+			<div className="w-full h-full">
 				<Page page={page} />
 			</div>
 		</div>
@@ -117,10 +118,10 @@ function Page({ page }: { page: string }) {
 		case "variables":
 			return <div>variables</div>;
 		case "connections":
-			return <div>connections</div>;
+			return <Connections />;
 		case "preferences":
 			return <div>preferences</div>;
 		default:
-			return <div>erro</div>;
+			return <div>Error</div>;
 	}
 }

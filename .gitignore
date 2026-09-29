@@ -9,7 +9,7 @@ src-tauri/target/
 # will have schema files for capabilities auto-completion
 src-tauri/gen/schemas
 
+biome.json
 
-src-tauri/icons
 
 .env

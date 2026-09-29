@@ -1,26 +1,34 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { Copy, Minus, Square, X } from "lucide-react";
+import {
+	Copy,
+	MessagesSquare,
+	Minus,
+	Square,
+	SquareText,
+	X,
+} from "lucide-react";
 import { useEffect, useState } from "react";
+import { ToggleChatWindow } from "./Multichat";
 import TransparentButton from "./TransparentButton";
 
 export default function Navbar() {
 	const appWindow = getCurrentWindow();
-	const [isMaximized, setIsMaximized] = useState(false); // controle do ícone de maximizar/restaurar
+	const [isMaximized, setIsMaximized] = useState(false); // Maximize/restore icon state.
 
 	useEffect(() => {
 		async function updateMaximizedState() {
-			// Função para atualizar o estado de maximização
+			// Update the maximized state.
 			const maximized = await appWindow.isMaximized();
 			setIsMaximized(maximized);
 		}
 
-		updateMaximizedState(); // Atualiza o estado inicial ao montar o componente
+		updateMaximizedState(); // Set the initial state when the component mounts.
 
 		let unlisten: (() => void) | undefined;
 
 		appWindow
 			.onResized(() => {
-				// Ouve o evento de redimensionamento da janela
+				// Listen for window resize events.
 				updateMaximizedState();
 			})
 			.then((dispose) => {
@@ -28,7 +36,7 @@ export default function Navbar() {
 			});
 
 		return () => {
-			// Limpeza do listener ao desmontar o componente
+			// Clean up the listener when the component unmounts.
 			if (unlisten) unlisten();
 		};
 	}, [appWindow]);
@@ -38,8 +46,21 @@ export default function Navbar() {
 			data-tauri-drag-region
 			className=" flex flex-row justify-between items-center w-full"
 		>
-			<div className="">
-				<img src="/logo.svg" alt="Logo" className="w-8 h-8 mx-1" />
+			<div className="flex-row flex">
+				<TransparentButton
+					className="p-0! m-0! w-8 h-8"
+					onClick={() => console.log("click")}
+				>
+					<img src="/assets/logo.svg" alt="Logo" className="w-8 h-8 m-1" />
+				</TransparentButton>
+				<div>
+					<TransparentButton onClick={() => ToggleChatWindow()}>
+						<MessagesSquare />
+					</TransparentButton>
+					<TransparentButton onClick={() => console.log("click")}>
+						<SquareText />
+					</TransparentButton>
+				</div>
 			</div>
 			<div className="flex self-center ml-1">
 				<TransparentButton

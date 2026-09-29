@@ -5,7 +5,7 @@
   font-size: 16px;
   line-height: 24px;
 
-  /* Paleta Clara */
+  /* Light palette. */
   --bg-app: #f4f4f5dc;
   --bg-surface: #ffffffdc;
   --text-main: #18181b;
@@ -15,9 +15,9 @@
   --primary-text: #ffffff;
 }
 
-/* Quando o app estiver em modo escuro */
+/* Dark mode palette. */
 .dark {
-  /* Paleta Escura (tons neutros/modernos) */
+  /* Dark palette with modern neutral tones. */
   --bg-app: #18181bdc;
   --bg-surface: #27272adc;
   --text-main: #f4f4f5;
@@ -42,7 +42,7 @@ body,
   user-select: none;
 }
 
-/* Controles padrão herdando as variáveis */
+/* Default controls inherit the theme variables. */
 button {
   cursor: pointer;
   background-color: var(--bg-surface);
@@ -60,4 +60,50 @@ input {
   border-radius: 6px;
   padding: 0.5rem 0.75rem;
   font-family: inherit;
+}
+
+.hide-number-controls {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.hide-number-controls::-webkit-inner-spin-button,
+.hide-number-controls::-webkit-outer-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.loading-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+}
+
+.loading-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #00f5d4;
+  animation: loading-dot-bounce 0.6s ease-in-out infinite alternate;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes loading-dot-bounce {
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-dots span {
+    animation: none;
+  }
 }
