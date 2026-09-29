@@ -61,3 +61,14 @@ input {
   padding: 0.5rem 0.75rem;
   font-family: inherit;
 }
+
+.hide-number-controls {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.hide-number-controls::-webkit-inner-spin-button,
+.hide-number-controls::-webkit-outer-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}

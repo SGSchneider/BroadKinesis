@@ -7,6 +7,7 @@ import {
 	Wrench,
 } from "lucide-react";
 import { useState } from "react";
+import Connections from "../pages/Connections";
 import TransparentButton from "./TransparentButton";
 
 export default function Dashboard() {
@@ -101,7 +102,7 @@ export default function Dashboard() {
 					<div className="h-full"></div>
 				</div>
 			</div>
-			<div>
+			<div className="w-full h-full">
 				<Page page={page} />
 			</div>
 		</div>
@@ -117,7 +118,7 @@ function Page({ page }: { page: string }) {
 		case "variables":
 			return <div>variables</div>;
 		case "connections":
-			return <div>connections</div>;
+			return <Connections />;
 		case "preferences":
 			return <div>preferences</div>;
 		default:

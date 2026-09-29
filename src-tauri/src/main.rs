@@ -7,5 +7,5 @@ fn main() {
     std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
   }
 
-    broadkinesis_lib::run();
+    let _ = broadkinesis_lib::run();
 }

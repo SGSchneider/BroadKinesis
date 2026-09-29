@@ -1,5 +1,12 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { Copy, Minus, Square, X } from "lucide-react";
+import {
+	Copy,
+	MessagesSquare,
+	Minus,
+	Square,
+	SquareText,
+	X,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import TransparentButton from "./TransparentButton";
 
@@ -38,8 +45,21 @@ export default function Navbar() {
 			data-tauri-drag-region
 			className=" flex flex-row justify-between items-center w-full"
 		>
-			<div className="">
-				<img src="/logo.svg" alt="Logo" className="w-8 h-8 mx-1" />
+			<div className="flex-row flex">
+				<TransparentButton
+					className="p-0! m-0! w-8 h-8"
+					onClick={() => console.log("click")}
+				>
+					<img src="/assets/logo.svg" alt="Logo" className="w-8 h-8 m-1" />
+				</TransparentButton>
+				<div>
+					<TransparentButton onClick={() => console.log("click")}>
+						<MessagesSquare />
+					</TransparentButton>
+					<TransparentButton onClick={() => console.log("click")}>
+						<SquareText />
+					</TransparentButton>
+				</div>
 			</div>
 			<div className="flex self-center ml-1">
 				<TransparentButton

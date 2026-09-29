@@ -11,6 +11,5 @@ src-tauri/gen/schemas
 
 biome.json
 
-src-tauri/icons
 
 .env
